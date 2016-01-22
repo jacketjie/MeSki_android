@@ -1,0 +1,30 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="jacketjie.common.libray.MainActivity">
+    <item
+        android:id="@+id/action_material"
+        android:orderInCategory="100"
+        android:title="MATERIAL"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_circles"
+        android:orderInCategory="100"
+        android:title="CIRCLES"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_water_drop"
+        android:orderInCategory="100"
+        android:title="WATER_DROP"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ring"
+        android:orderInCategory="100"
+        android:title="RING"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_smartisan"
+        android:orderInCategory="100"
+        android:title="SMARTISAN"
+        app:showAsAction="never" />
+</menu>

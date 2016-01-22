@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--   <android.support.v4.view.ViewPager
+           android:id="@+id/id_view_pager"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"/>-->
+    <!--<include layout="@layout/view_pager_layout"/>-->
+    <jacketjie.common.libray.custom.view.viewpager.ScrollBanner
+        xmlns:pager="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/id_banner"
+        pager:banner_aspect_ratio="0.32"
+        pager:banner_can_cycle="true"
+        pager:banner_need_indicator="true"
+        pager:banner_trans_former="defaultPage"
+        pager:banner_scroll_factor="3"
+        pager:banner_scroll_interval="5000"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>
+
+

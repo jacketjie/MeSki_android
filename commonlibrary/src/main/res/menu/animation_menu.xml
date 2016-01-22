@@ -1,0 +1,55 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="jacketjie.common.libray.view.AnimationTestActivity">
+    <item
+        android:id="@+id/action_accelerateDecelerate"
+        android:orderInCategory="100"
+        android:title="ACCELERATEDECELERATE"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_accelerate"
+        android:orderInCategory="100"
+        android:title="ACCELERATE"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_anticipate"
+        android:orderInCategory="100"
+        android:title="ANTICIPATE"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_anticipateOvershoot"
+        android:orderInCategory="100"
+        android:title="ANTICIPATEOVERSHOOT"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_decelerate"
+        android:orderInCategory="100"
+        android:title="DECELERATE"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_fastOutLinearIn"
+        android:orderInCategory="100"
+        android:title="FASTOUTLINEARIN"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_fastOutSlowIn"
+        android:orderInCategory="100"
+        android:title="FASTOUTSLOWIN"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_linear"
+        android:orderInCategory="100"
+        android:title="LINEAR"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_linearOutSlowIn"
+        android:orderInCategory="100"
+        android:title="LINEAROUTSLOWIN"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_overshoot"
+        android:orderInCategory="100"
+        android:title="OVERSHOOT"
+        app:showAsAction="never" />
+</menu>

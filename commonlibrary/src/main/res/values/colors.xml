@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#db0706</color>
+    <color name="colorPrimaryDark">#c20605</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="main_bg_color">#f2f2f2</color>
+
+    <color name="gird_item_select_color">#FFA79CA0</color>
+
+
+
+</resources>
