@@ -2,7 +2,6 @@ package com.incool.meski_android;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -30,8 +29,9 @@ import com.incool.meski_android.view.fragment.SecondFragment;
 import com.incool.meski_android.view.fragment.ThirdFragment;
 
 import jacketjie.common.libray.custom.view.tabhost.AnimFragmentTabHost;
+import jacketjie.common.libray.others.ToastUtils;
 
-public class MainActivity extends AppCompatActivity implements SecondFragment.OnSecondFragmentTouchEventListener{
+public class MainActivity extends AppCompatActivity implements SecondFragment.OnSecondFragmentTouchEventListener {
     private static final int DEFAULT_TAB_COLOR = Color.parseColor("#666666");
 
     private static int SELECTED_TAB_COLOR = Color.RED;
@@ -46,9 +46,19 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     private int[] tabImageIds = {R.drawable.ic_account_box_black_24dp, R.drawable.ic_dashboard, R.drawable.ic_headset, R.drawable.ic_settings_black_24dp};
     private int[] tabImageSelectedIds = {R.drawable.ic_account_box_black_24dp, R.drawable.ic_dashboard, R.drawable.ic_headset, R.drawable.ic_settings_black_24dp};
     ;
-    protected int currentId;
+    public static final int FIRST_FRAGMENT = 0;
+    public static final int SECOND_FRAGMENT = 1;
+    public static final int THIRD_FRAGMENT = 2;
+    public static final int FORTH_FRAGMENT = 3;
 
+    protected int currentId = FIRST_FRAGMENT;
     private SecondFragment secondFragment;
+
+    public static final int SEARCH_REQUEST_CODE = 0x123;
+    public static final String RESPONSE_SEARCH_RESULT = "response_search_result";
+
+    private View secondTopTabs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         setContentView(R.layout.activity_main);
         initView();
         initTabHost();
-        setTabSelect(currentId);
+        setClickedTab(currentId);
     }
 
     /**
@@ -68,6 +78,8 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         toolbar.setTitle(TAB_TILES[0]);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        secondTopTabs = findViewById(R.id.id_top1);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.id_menu, new AppMenuLeftFragment());
@@ -115,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
             @Override
             public void onTabChanged(String tabId) {
                 currentId = tabHost.getCurrentTab();
-                setTabSelect(currentId);
+                setClickedTab(currentId);
             }
         });
         tabHost.getTabWidget().setDividerDrawable(null);
@@ -127,7 +139,13 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
      *
      * @param index
      */
-    protected void setTabSelect(int index) {
+    protected void setClickedTab(int index) {
+        if (index == SECOND_FRAGMENT) {
+            secondTopTabs.setVisibility(View.VISIBLE);
+        } else {
+            secondTopTabs.setVisibility(View.GONE);
+        }
+        getSupportActionBar().invalidateOptionsMenu();
         for (int i = 0; i < TAB_TILES.length; i++) {
             View tabView = tabHost.getTabWidget().getChildAt(i);
             if (index == i) {
@@ -149,28 +167,28 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     }
 
     @Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		switch (ev.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-                if (secondFragment!=null){
-                    if (secondFragment.onTouchEvent(ev)){
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                if (secondFragment != null) {
+                    if (secondFragment.onTouchEvent(ev)) {
                         return true;
                     }
                 }
                 break;
-		}
-		return super.dispatchTouchEvent(ev);
-	}
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(Gravity.LEFT)){
+        if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawer(Gravity.LEFT);
             return;
         }
-        if (secondFragment!=null){
-            if(secondFragment.onBackPressed()){
+        if (secondFragment != null) {
+            if (secondFragment.onBackPressed()) {
                 return;
             }
         }
@@ -194,25 +212,33 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         return tabView;
     }
 
+    public View getSecondTopTabs() {
+        return secondTopTabs;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_pager_menu, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        if (currentId == FIRST_FRAGMENT || currentId == SECOND_FRAGMENT) {
+            item.setVisible(true);
+        } else {
+            item.setVisible(false);
+        }
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_search) {
             Intent intent = new Intent(this, SearchDetailActivity.class);
-            intent.putExtra("currentId",currentId);
-            startActivity(intent);
+            intent.putExtra("currentId", currentId);
+            startActivityForResult(intent, SEARCH_REQUEST_CODE);
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         }
 
@@ -225,4 +251,16 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SEARCH_REQUEST_CODE:
+                if (RESULT_OK == resultCode) {
+                    String result = data.getStringExtra(RESPONSE_SEARCH_RESULT);
+                    ToastUtils.showShort(getApplicationContext(), "搜索：" + result);
+                }
+                break;
+        }
+    }
 }

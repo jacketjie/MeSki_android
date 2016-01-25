@@ -1,12 +1,15 @@
 package com.incool.meski_android.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.incool.meski_android.MainActivity;
 import com.incool.meski_android.R;
 
 import jacketjie.common.libray.custom.view.edittext.EditTextWithDrawable;
@@ -45,17 +48,17 @@ public class SearchDetailActivity extends AppCompatActivity {
         searchEdit.setOnEditTextDrawableClickListener(new OnEditTextDrawableClickListener() {
             @Override
             public void onDefaultLeftClick() {
-
+                ToastUtils.showShort(getApplicationContext(), "输入搜索内容。。。");
             }
 
             @Override
             public void onDefaultRightClick() {
-                ToastUtils.showShort(getApplicationContext(),"嘿嘿，语音功能不会做。。。");
+                ToastUtils.showShort(getApplicationContext(), "嘿嘿，语音功能不会做。。。");
             }
 
             @Override
             public void onEnableLeftClick() {
-
+                ToastUtils.showShort(getApplicationContext(), "输入搜索内容，马上进行搜索。。。");
             }
 
             @Override
@@ -66,7 +69,15 @@ public class SearchDetailActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShort(getApplicationContext(), searchEdit.getText().toString());
+                String result = searchEdit.getText().toString();
+                if (TextUtils.isEmpty(result)) {
+
+                } else {
+                    Intent resultSearchIntent = getIntent();
+                    resultSearchIntent.putExtra(MainActivity.RESPONSE_SEARCH_RESULT, result);
+                    setResult(RESULT_OK, resultSearchIntent);
+                    onBackPressed();
+                }
             }
         });
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -75,5 +86,11 @@ public class SearchDetailActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 }

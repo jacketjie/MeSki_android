@@ -207,31 +207,38 @@
         <!-- viewpager切换周期-->
         <attr name="banner_scroll_interval" format="integer" />
         <!-- 是否可以轮播-->
-        <attr name="banner_can_cycle" format="boolean"/>
+        <attr name="banner_can_cycle" format="boolean" />
         <!-- 是否需要页面指示器-->
-        <attr name="banner_need_indicator" format="boolean"/>
+        <attr name="banner_need_indicator" format="boolean" />
         <!-- viewPager切换动画-->
         <attr name="banner_trans_former" format="enum">
-            <enum name="defaultPage" value="0"/>
-            <enum name="depthPage" value="1"/>
-            <enum name="zommOutPage" value="2"/>
+            <enum name="defaultPage" value="0" />
+            <enum name="depthPage" value="1" />
+            <enum name="zommOutPage" value="2" />
         </attr>
     </declare-styleable>
 
 
     <!--SwipeBack -->
     <declare-styleable name="SwipeBackLayout">
-        <attr name="edge_size" format="dimension"/>
+        <attr name="edge_size" format="dimension" />
         <attr name="edge_flag">
             <enum name="left" value="0" />
             <enum name="right" value="1" />
             <enum name="bottom" value="2" />
             <enum name="all" value="3" />
         </attr>
-        <attr name="shadow_left" format="reference"/>
-        <attr name="shadow_right" format="reference"/>
-        <attr name="shadow_bottom" format="reference"/>
+        <attr name="shadow_left" format="reference" />
+        <attr name="shadow_right" format="reference" />
+        <attr name="shadow_bottom" format="reference" />
     </declare-styleable>
-    <attr name="SwipeBackLayoutStyle" format="reference"/>
+    <attr name="SwipeBackLayoutStyle" format="reference" />
 
+    <!-- EditTextWithImage-->
+    <declare-styleable name="SearchEditTextWithImage">
+        <attr name="leftDefaultImage" format="reference" />
+        <attr name="leftEnableImage" format="reference" />
+        <attr name="rightDefaultImage" format="reference" />
+        <attr name="rightEnableImage" format="reference" />
+    </declare-styleable>
 </resources>

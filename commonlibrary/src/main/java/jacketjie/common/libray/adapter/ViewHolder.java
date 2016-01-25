@@ -47,9 +47,6 @@ public class ViewHolder
 		.bitmapConfig(Bitmap.Config.RGB_565)
 		.build();
 		
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
-		 .build();
-		ImageLoader.getInstance().init(config);
 	}
 
 	/**

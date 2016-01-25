@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/id_top1"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:orientation="horizontal"
+    android:showDividers="middle">
+
+    <FrameLayout
+        android:id="@+id/id_mSelectedOne"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/id_mSelectedOneText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/second_btn_selector"
+            android:gravity="center"
+            android:text="全部区域"
+            android:textColor="@color/second_tab_default_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:scaleType="centerInside"
+            android:id="@+id/id_mSelectedOneImage"
+            android:layout_width="@dimen/second_tab_image_size"
+            android:layout_height="@dimen/second_tab_image_size"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/icon_angle_light_black" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/id_mSelectedTwo"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/id_mSelectedTwoText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/second_btn_selector"
+            android:gravity="center"
+            android:text="不限价格"
+            android:textColor="@color/second_tab_default_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/id_mSelectedTwoImage"
+            android:layout_width="@dimen/second_tab_image_size"
+            android:layout_height="@dimen/second_tab_image_size"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/icon_angle_light_black" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/id_mSelectedThree"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/id_mSelectedThreeText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/second_btn_selector"
+            android:gravity="center"
+            android:text="所有类型"
+            android:textColor="@color/second_tab_default_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/id_mSelectedThreeImage"
+            android:layout_width="@dimen/second_tab_image_size"
+            android:layout_height="@dimen/second_tab_image_size"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/icon_angle_light_black" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/id_mSelectedFour"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/id_mSelectedFourText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/second_btn_selector"
+            android:gravity="center"
+            android:text="推荐排序"
+            android:textColor="@color/second_tab_default_color"
+            android:textSize="12sp" />
+
+        <ImageView
+            android:id="@+id/id_mSelectedFourImage"
+            android:layout_width="@dimen/second_tab_image_size"
+            android:layout_height="@dimen/second_tab_image_size"
+            android:layout_gravity="right|center_vertical"
+            android:src="@drawable/icon_angle_light_black" />
+    </FrameLayout>
+</LinearLayout>

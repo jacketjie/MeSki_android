@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card="http://schemas.android.com/apk/res-auto"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    card:cardBackgroundColor="#F2F2F2"
+    android:background="#F2F2F2"
     android:layout_height="wrap_content">
 
     <RelativeLayout
@@ -71,4 +70,4 @@
             android:layout_margin="10dp"
             android:text="在售" />
     </RelativeLayout>
-</android.support.v7.widget.CardView>
+</FrameLayout>

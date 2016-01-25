@@ -20,7 +20,6 @@ import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,18 +85,7 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
     }
 
     private void initDatas() {
-        options = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_stub)
-                .showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
-                .showImageOnFail(R.drawable.plugin_camera_no_pictures)
-                .imageScaleType(ImageScaleType.EXACTLY)
-                .cacheInMemory(false)// 设置下载的图片是否缓存在内存中
-                .resetViewBeforeLoading(true)//设置图片在下载前是否重置，复位
-                .displayer(new FadeInBitmapDisplayer(100))//设置图片渐显的时间
-                .cacheOnDisk(true)
-                .considerExifParams(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .build();
+
         Drawable d = getResources().getDrawable(R.drawable.test_menu_0);
         Drawable d1 = getResources().getDrawable(R.drawable.test_menu_1);
 

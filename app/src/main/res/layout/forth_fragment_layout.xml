@@ -15,7 +15,7 @@
         android:showDividers="middle">
 
         <TextView
-            android:id="@+id/id_mSelectedOne"
+            android:id="@+id/id_mSelectedOneText"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"

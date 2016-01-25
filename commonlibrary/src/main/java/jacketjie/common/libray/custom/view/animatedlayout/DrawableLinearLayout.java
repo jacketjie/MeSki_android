@@ -258,6 +258,7 @@ public class DrawableLinearLayout extends LinearLayout implements AnimatedLayout
         ValueAnimator objectAnimator = null;
         objectAnimator = createDrawableAnimation(startPos, endPos);
         objectAnimator.setDuration(duration == null ? mDuration : duration);
+
         return objectAnimator;
     }
 
@@ -271,6 +272,7 @@ public class DrawableLinearLayout extends LinearLayout implements AnimatedLayout
             handler.sendEmptyMessage(ANIMATION_UPDATE_CODE);
         }
     }
+
 
 
     public void requestLayoutByAnim(){
@@ -403,6 +405,10 @@ public class DrawableLinearLayout extends LinearLayout implements AnimatedLayout
         }
     }
 
+
+    public boolean isAnimation() {
+        return isAnimation;
+    }
 
     public boolean isVertical() {
         return getOrientation() == VERTICAL;

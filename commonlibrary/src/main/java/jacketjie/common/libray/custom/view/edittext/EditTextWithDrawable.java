@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 
 import jacketjie.common.libray.R;
+import jacketjie.common.libray.others.DensityUtils;
 import jacketjie.common.libray.others.ToastUtils;
 
 
@@ -27,17 +28,11 @@ public class EditTextWithDrawable extends EditText implements TextWatcher {
     private OnEditTextDrawableClickListener onEditTextDrawableClickListener;
     private boolean isDrawableLeftEnable;
     private boolean isDrawableRightEnable;
+    private int offset;
 
     public void setOnEditTextDrawableClickListener(OnEditTextDrawableClickListener onEditTextDrawableClickListener) {
         this.onEditTextDrawableClickListener = onEditTextDrawableClickListener;
         setFocusable(true);
-//        setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                return onDrawableClickEvent(event);
-//            }
-//        });
     }
 
 
@@ -56,6 +51,8 @@ public class EditTextWithDrawable extends EditText implements TextWatcher {
     }
 
     private void init(Context context, AttributeSet attrs) {
+        offset = DensityUtils.dp2px(context,2);
+
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.EditTextWithDrawable, 0, 0);
         try {
             defaultDrawableLeft = ta.getDrawable(R.styleable.EditTextWithDrawable_defaultDrawableLeft);
@@ -84,55 +81,92 @@ public class EditTextWithDrawable extends EditText implements TextWatcher {
 
     public void clear() {
         setText("");
-        setFocusable(false);
+//        setFocusable(false);
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        int eventX, eventY;
-//        Rect rect;
-//        if(handlerEvent(event)){
-//            return true;
-//        }
         int eventX, eventY;
         Rect rect = new Rect();
         if (MotionEvent.ACTION_DOWN == event.getAction()) {
+            getGlobalVisibleRect(rect);
             eventX = (int) event.getRawX();
             eventY = (int) event.getRawY();
-            int[] position = new int[2];
-            getLocationOnScreen(position);
-            rect.left = position[0] + getPaddingLeft();
-            rect.top = position[1] + getPaddingTop();
-            rect.bottom = rect.top + getMeasuredHeight() + getPaddingBottom();
-            rect.right = rect.left + getMeasuredWidth() + getPaddingRight();
             if (onEditTextDrawableClickListener != null) {
-                Rect leftRect = new Rect();
-                leftRect.top = position[1];
-                leftRect.bottom = leftRect.top + getPaddingTop() + getPaddingBottom() + getMeasuredHeight();
-                leftRect.left = position[0] + getPaddingLeft();
-                leftRect.right = leftRect.left  + (defaultDrawableRight == null ? drawableRightEnable.getMinimumWidth() : defaultDrawableRight.getMinimumWidth());
-                if (leftRect.contains(eventX, eventY)) {
-                    if (isDrawableLeftEnable) {
+                Rect leftRect = new Rect(rect);
+                leftRect.left = leftRect.left + getPaddingLeft() - offset;
+                if (isDrawableLeftEnable) {
+                    leftRect.right = leftRect.left + drawableLeftEnable.getMinimumWidth() + offset;
+                    if (leftRect.contains(eventX, eventY)) {
                         onEditTextDrawableClickListener.onEnableLeftClick();
-                    } else {
+                        return true;
+                    }
+                } else {
+                    leftRect.right = leftRect.left + defaultDrawableLeft.getMinimumWidth()+ offset;
+                    if (leftRect.contains(eventX, eventY)) {
                         onEditTextDrawableClickListener.onDefaultLeftClick();
+                        return true;
                     }
                 }
-                Rect rightRect = new Rect();
-                rightRect.top = position[1];
-                rightRect.bottom = rightRect.top + getMeasuredHeight() + getPaddingTop() + getPaddingBottom();
-                rightRect.right = position[0] + getMeasuredWidth() + getPaddingRight();
-                rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth();
-                if (rightRect.contains(eventX, eventY)) {
-                    if (isDrawableLeftEnable) {
-                        onEditTextDrawableClickListener.onEnableRightClick();
-                    } else {
+                Rect rightRect = new Rect(rect);
+                if (isDrawableRightEnable) {
+                    rightRect.right = rightRect.right - getPaddingRight() + offset;
+                    if (isDrawableRightEnable) {
+                        rightRect.left = rightRect.right - drawableRightEnable.getMinimumWidth() -  offset;
+                        if (rightRect.contains(eventX, eventY)) {
+                            onEditTextDrawableClickListener.onEnableRightClick();
+                            return true;
+                        }
+                    }
+                } else {
+                    rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth() -  offset;
+                    if (rightRect.contains(eventX, eventY)) {
                         onEditTextDrawableClickListener.onDefaultRightClick();
+                        return true;
                     }
                 }
             }
-
         }
+
+
+//        if (MotionEvent.ACTION_DOWN == event.getAction()) {
+//
+//            eventX = (int) event.getRawX();
+//            eventY = (int) event.getRawY();
+//            int[] position = new int[2];
+//            getLocationOnScreen(position);
+//            rect.left = position[0] + getPaddingLeft();
+//            rect.top = position[1] + getPaddingTop();
+//            rect.bottom = rect.top + getMeasuredHeight() + getPaddingBottom();
+//            rect.right = rect.left + getMeasuredWidth() + getPaddingRight();
+//            if (onEditTextDrawableClickListener != null) {
+//                Rect leftRect = new Rect();
+//                leftRect.top = position[1];
+//                leftRect.bottom = leftRect.top + getPaddingTop() + getPaddingBottom() + getMeasuredHeight();
+//                leftRect.left = position[0] + getPaddingLeft();
+//                leftRect.right = leftRect.left  + (defaultDrawableRight == null ? drawableRightEnable.getMinimumWidth() : defaultDrawableRight.getMinimumWidth());
+//                if (leftRect.contains(eventX, eventY)) {
+//                    if (isDrawableLeftEnable) {
+//                        onEditTextDrawableClickListener.onEnableLeftClick();
+//                    } else {
+//                        onEditTextDrawableClickListener.onDefaultLeftClick();
+//                    }
+//                }
+//                Rect rightRect = new Rect();
+//                rightRect.top = position[1];
+//                rightRect.bottom = rightRect.top + getMeasuredHeight() + getPaddingTop() + getPaddingBottom();
+//                rightRect.right = position[0] + getMeasuredWidth() + getPaddingRight();
+//                rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth();
+//                if (rightRect.contains(eventX, eventY)) {
+//                    if (isDrawableLeftEnable) {
+//                        onEditTextDrawableClickListener.onEnableRightClick();
+//                    } else {
+//                        onEditTextDrawableClickListener.onDefaultRightClick();
+//                    }
+//                }
+//            }
+//
+//        }
 //        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 //            eventX = (int) event.getRawX();
 //            eventY = (int) event.getRawY();
@@ -172,40 +206,73 @@ public class EditTextWithDrawable extends EditText implements TextWatcher {
         int eventX, eventY;
         Rect rect = new Rect();
         if (MotionEvent.ACTION_DOWN == event.getAction()) {
+            getGlobalVisibleRect(rect);
             eventX = (int) event.getRawX();
             eventY = (int) event.getRawY();
-            int[] position = new int[2];
-            getLocationOnScreen(position);
-            rect.left = position[0] + getPaddingLeft();
-            rect.top = position[1] + getPaddingTop();
-            rect.bottom = rect.top + getMeasuredHeight() + getPaddingBottom();
-            rect.right = rect.left + getMeasuredWidth() + getPaddingRight();
             if (onEditTextDrawableClickListener != null) {
-                Rect leftRect = new Rect();
-                leftRect.top = position[1];
-                leftRect.bottom = leftRect.top + getPaddingTop() + getPaddingBottom() + getMeasuredHeight();
-                leftRect.left = position[0] + getPaddingLeft();
-                leftRect.right = leftRect.left + getPaddingLeft() + (defaultDrawableRight == null ? drawableRightEnable.getMinimumWidth() : defaultDrawableRight.getMinimumWidth());
-                if (leftRect.contains(eventX, eventY)) {
-                    if (isDrawableLeftEnable) {
+                Rect leftRect = new Rect(rect);
+                leftRect.left = leftRect.left + getPaddingLeft();
+                if (isDrawableLeftEnable) {
+                    leftRect.right = leftRect.left + drawableLeftEnable.getMinimumWidth();
+                    if (leftRect.contains(eventX, eventY)) {
                         onEditTextDrawableClickListener.onEnableLeftClick();
-                    } else {
+                    }
+                } else {
+                    leftRect.right = leftRect.left + defaultDrawableLeft.getMinimumWidth();
+                    if (leftRect.contains(eventX, eventY)) {
                         onEditTextDrawableClickListener.onDefaultLeftClick();
                     }
                 }
-                Rect rightRect = new Rect();
-                rightRect.top = position[1];
-                rightRect.bottom = rightRect.top + getMeasuredHeight() + getPaddingTop() + getPaddingBottom();
-                rightRect.right = position[0] + getMeasuredWidth();
-                rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth();
-                if (rightRect.contains(eventX, eventY)) {
-                    if (isDrawableLeftEnable) {
-                        onEditTextDrawableClickListener.onEnableRightClick();
+                if (isDrawableRightEnable) {
+                    Rect rightRect = new Rect(rect);
+                    rightRect.right = rightRect.right - getPaddingRight();
+                    if (isDrawableRightEnable) {
+                        rightRect.left = rightRect.right - drawableRightEnable.getMinimumWidth();
+                        if (rightRect.contains(eventX, eventY)) {
+                            onEditTextDrawableClickListener.onEnableRightClick();
+                        }
                     } else {
-                        onEditTextDrawableClickListener.onDefaultRightClick();
+                        rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth();
+                        if (rightRect.contains(eventX, eventY)) {
+                            onEditTextDrawableClickListener.onDefaultRightClick();
+                        }
                     }
                 }
             }
+
+
+//            int[] position = new int[2];
+//            getLocationOnScreen(position);
+//            rect.left = position[0] + getPaddingLeft();
+//            rect.top = position[1] + getPaddingTop();
+//            rect.bottom = rect.top + getMeasuredHeight() + getPaddingBottom();
+//            rect.right = rect.left + getMeasuredWidth() + getPaddingRight();
+//            if (onEditTextDrawableClickListener != null) {
+//                Rect leftRect = new Rect();
+//                leftRect.top = position[1];
+//                leftRect.bottom = leftRect.top + getPaddingTop() + getPaddingBottom() + getMeasuredHeight();
+//                leftRect.left = position[0] + getPaddingLeft();
+//                leftRect.right = leftRect.left + getPaddingLeft() + (defaultDrawableRight == null ? drawableRightEnable.getMinimumWidth() : defaultDrawableRight.getMinimumWidth());
+//                if (leftRect.contains(eventX, eventY)) {
+//                    if (isDrawableLeftEnable) {
+//                        onEditTextDrawableClickListener.onEnableLeftClick();
+//                    } else {
+//                        onEditTextDrawableClickListener.onDefaultLeftClick();
+//                    }
+//                }
+//                Rect rightRect = new Rect();
+//                rightRect.top = position[1];
+//                rightRect.bottom = rightRect.top + getMeasuredHeight() + getPaddingTop() + getPaddingBottom();
+//                rightRect.right = position[0] + getMeasuredWidth();
+//                rightRect.left = rightRect.right - defaultDrawableRight.getMinimumWidth();
+//                if (rightRect.contains(eventX, eventY)) {
+//                    if (isDrawableLeftEnable) {
+//                        onEditTextDrawableClickListener.onEnableRightClick();
+//                    } else {
+//                        onEditTextDrawableClickListener.onDefaultRightClick();
+//                    }
+//                }
+//            }
 
         }
         return false;

@@ -4,4 +4,7 @@
     <item name="id_tag_autolayout_padding" type="id"></item>
     <item name="id_tag_autolayout_margin" type="id"></item>
     <item name="id_auto_carouse_viewpager" type="id"></item>
+    <item name="id_edit_with_left_image" type="id"></item>
+    <item name="id_edit_with_right_image" type="id"></item>
+    <item name="id_edit_with_edit_text" type="id"></item>
 </resources>

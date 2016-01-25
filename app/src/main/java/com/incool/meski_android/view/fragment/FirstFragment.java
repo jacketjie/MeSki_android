@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,9 @@ public class FirstFragment extends Fragment{
 	private String[]mDatas = {"我是来度假的","我是来滑雪、雪橇的","我是来观光的","我对房产感兴趣"};
 	private List<String> urls;
 	private ScrollBanner banner;
+	private SwipeRefreshLayout refreshLayout;
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
@@ -72,6 +76,9 @@ public class FirstFragment extends Fragment{
 		});
 
 		detailListView = (ListView) view.findViewById(R.id.id_detailListView);
+
+		refreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.id_firstRefresh);
+		refreshLayout.setColorSchemeColors(R.color.colorPrimary);
 	}
 	private void initDatas() {
 		DetailAdapter mAdapter = new DetailAdapter(getActivity(), Arrays.asList(mDatas),R.layout.first_detail_list_item);
