@@ -25,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    pager:banner_aspect_ratio="0.45"
+                    pager:banner_aspect_ratio="0.53"
                     pager:banner_can_cycle="true"
                     pager:banner_need_indicator="true"
                     pager:banner_scroll_factor="3"
@@ -34,53 +34,104 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="#7FB3FE"
-
+                    android:layout_height="44dp"
+                    android:background="@android:color/white"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:drawableLeft="@drawable/icon_cloud"
-                        android:drawablePadding="10dp"
-                        android:gravity="center_vertical"
-                        android:paddingLeft="20dp"
-                        android:text="16 ~ 20  晴"
-                        android:textColor="@android:color/white"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:orientation="horizontal">
 
-                    <TextView
+                        <TextView
+                            android:id="@+id/id_temperature"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:paddingLeft="36.7dp"
+                            android:text="5℃"
+                            android:textColor="#6aa3d8"
+                            android:textSize="22sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/id_temperature_des"
+                            android:layout_width="wrap_content"
+                            android:layout_height="36dp"
+                            android:layout_marginLeft="14.67dp"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:text="雨夹雪"
+                            android:textColor="#6aa3d8"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="0dp"
-                        android:layout_height="36dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:gravity="center"
-                        android:text="体感温度12 湿度12%"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/id_yesterday"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/home_weather_snow_pre"
+                            android:gravity="center"
+                            android:text="今天"
+                            android:textColor="#484848"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/id_today"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/home_weather_snow_pre"
+                            android:gravity="center"
+                            android:text="明天"
+                            android:textColor="#939393"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/id_tomorrow"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/home_weather_snow_pre"
+                            android:gravity="center"
+                            android:text="后天"
+                            android:textColor="#939393"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="110.67dp"
+                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginRight="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="3.67dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/scene_1" />
 
                     <ImageView
                         android:layout_width="0dp"
-                        android:layout_height="120dp"
-                        android:layout_marginLeft="2dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="3.66dp"
                         android:layout_weight="1"
                         android:scaleType="centerCrop"
                         android:src="@drawable/scene_2" />
@@ -88,65 +139,131 @@
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="110.67dp"
+                    android:layout_marginTop="8dp"
                     android:scaleType="centerCrop"
                     android:src="@drawable/scene_3" />
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="我在找" />
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@android:color/white"
+                    android:drawableLeft="@drawable/home_icon_finding"
+                    android:drawablePadding="7.33dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14.67dp"
+                    android:text="我在找"
+                    android:textColor="#444444" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55.33dp"
                     android:orientation="horizontal">
 
-                    <Button
+                    <FrameLayout
+                        android:clickable="true"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="#98CDFF"
-                        android:text="@string/str_hotels"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/first_hotel_selector">
 
-                    <Button
-                        android:layout_width="0dp"
-                        android:layout_height="50dp"
-                        android:layout_weight="1"
-                        android:background="#7FB3FE"
-                        android:text="@string/str_ski_tickets"
-                        android:textColor="@android:color/white" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/home_icon_finding_hotel"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/str_hotels"
+                            android:textColor="@android:color/white" />
+                    </FrameLayout>
 
-                    <Button
+                    <FrameLayout
+                        android:clickable="true"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="#6599FF"
-                        android:text="@string/str_tourist_tickets"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/first_ski_selector">
 
-                    <Button
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/home_icon_finding_xuepiao"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/str_ski_tickets"
+                            android:textColor="@android:color/white" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:clickable="true"
                         android:layout_width="0dp"
-                        android:layout_height="50dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:background="#397BD8"
-                        android:text="@string/str_estate"
-                        android:textColor="@android:color/white" />
+                        android:background="@drawable/first_sightseeing_selector">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/home_icon_finding_guanguangpiao"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/str_tourist_tickets"
+                            android:textColor="@android:color/white" />
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:clickable="true"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/first_estate_selector">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center"
+                            android:drawableLeft="@drawable/home_icon_finding_house"
+                            android:drawablePadding="10dp"
+                            android:gravity="center_vertical"
+                            android:text="@string/str_estate"
+                            android:textColor="@android:color/white" />
+                    </FrameLayout>
+
+
                 </LinearLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="32dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="14.67dp"
+                    android:background="@android:color/white"
+                    android:drawablePadding="7.33dp"
+                    android:drawableLeft="@drawable/home_icon_loved"
+                    android:layout_marginTop="8dp"
+                    android:textColor="#444444"
                     android:text="我想要" />
 
-                <jacketjie.common.libray.custom.view.ListViewForScrollView
+                <!--<jacketjie.common.libray.custom.view.ListViewForScrollView-->
+                    <!--android:id="@+id/id_detailListView"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="match_parent" />-->
+                <jacketjie.common.libray.custom.view.GridViewForScrollView
                     android:id="@+id/id_detailListView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="wrap_content"
+                    android:background="#f5f5f5"
+                    android:choiceMode="singleChoice"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:horizontalSpacing="8dp"
+                    android:numColumns="2"
+                    android:scrollbars="none"
+                    android:verticalSpacing="8dp" />
             </LinearLayout>
         </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>

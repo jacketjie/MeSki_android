@@ -243,6 +243,7 @@ public class ScrollBanner extends FrameLayout {
     @Override
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
+        Log.e("onWindowFocusChanged","hasWindowFocus"+hasWindowFocus);
         if (!hasWindowFocus) {
             mViewPager.stopAutoScroll();
         } else if (canAutoScroll)
@@ -324,6 +325,10 @@ public class ScrollBanner extends FrameLayout {
                 removeView(pageIndicator);
             }
         }
+    }
+
+    public AutoScrollViewPager getViewPager() {
+        return mViewPager;
     }
 
     private OnPageClickListener onPageClickListener;

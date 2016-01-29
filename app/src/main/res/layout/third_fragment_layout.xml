@@ -6,55 +6,6 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/id_top1"
-        android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:divider="@drawable/horizontal_divider"
-        android:orientation="horizontal"
-        android:showDividers="middle">
-
-        <TextView
-            android:id="@+id/id_mSelectedOneText"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/second_btn_selector"
-            android:gravity="center"
-            android:text="全部区域"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/id_mSelectedTwo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/second_btn_selector"
-            android:gravity="center"
-            android:text="不限价格"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/id_mSelectedThree"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/second_btn_selector"
-            android:gravity="center"
-            android:text="所有类型"
-            android:textColor="@android:color/white" />
-
-        <TextView
-            android:id="@+id/id_mSelectedFour"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/second_btn_selector"
-            android:gravity="center"
-            android:text="推荐排序"
-            android:textColor="@android:color/white" />
-    </LinearLayout>
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

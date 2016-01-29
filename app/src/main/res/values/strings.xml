@@ -11,6 +11,11 @@
     <string name="str_tourist_tickets">观光票</string>
     <string name="str_estate">房产</string>
     <string name="str_action_search">搜索</string>
+    <string name="str_exit_app">退出应用吗？</string>
+    <string name="str_exit">退出</string>
+    <string name="str_cancle">取消</string>
+    <string name="str_exit_message">点击退出，确认退出本应用</string>
+    <string name="action_share">分享</string>
 
     <string-array name="main_tab_titles">
         <item>首页</item>

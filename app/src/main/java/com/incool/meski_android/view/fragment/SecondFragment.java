@@ -5,13 +5,16 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -25,7 +28,9 @@ import android.widget.TextView;
 
 import com.incool.meski_android.MainActivity;
 import com.incool.meski_android.R;
+import com.incool.meski_android.view.activity.EstateDetailActivity;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -34,11 +39,12 @@ import jacketjie.common.libray.adapter.CommonAdapter;
 import jacketjie.common.libray.adapter.ViewHolder;
 import jacketjie.common.libray.custom.view.animatedlayout.AnimatedLayoutListener;
 import jacketjie.common.libray.custom.view.animatedlayout.DrawableLinearLayout;
+import jacketjie.common.libray.others.ToastUtils;
 
 
 public class SecondFragment extends Fragment {
     private View view;
-    private ListView firstListView;
+    private ListView secondListView;
     private DrawableLinearLayout drawableLinearLayout;
     private GridView mSelections;
     private ImageView bg;
@@ -64,13 +70,40 @@ public class SecondFragment extends Fragment {
     //    private View top1;
     private SwipeRefreshLayout pullToRefresh;
     private int currentTabClickPos;
-    private Handler handler;
+    private MyHandler handler;
+
+    private static final int ANIMATION_CODE = 0x147;
+    private View tabs;
 
     public interface OnSecondFragmentTouchEventListener {
         void setFragmentInstance(SecondFragment fragment);
     }
 
     protected OnSecondFragmentTouchEventListener onSecondFragmentTouchEventListener;
+
+
+    private class MyHandler extends Handler {
+        private SoftReference<SecondFragment> reference;
+
+        public MyHandler(SecondFragment secondFragment) {
+            reference = new SoftReference<SecondFragment>(secondFragment);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            SecondFragment fragment = reference.get();
+            if (fragment != null) {
+                switch (msg.what) {
+                    case ANIMATION_CODE:
+                        int pos = msg.arg1;
+                        displayOrHidden(topTabs.get(pos));
+                        break;
+
+                }
+            }
+        }
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -97,16 +130,20 @@ public class SecondFragment extends Fragment {
      * 初始化
      */
     private void initView() {
-        firstListView = (ListView) view.findViewById(R.id.id_firstListView);
+        secondListView = (ListView) view.findViewById(R.id.id_firstListView);
         drawableLinearLayout = (DrawableLinearLayout) view.findViewById(R.id.id_drawer_layout);
         mSelections = (GridView) view.findViewById(R.id.id_mSelections);
         bg = (ImageView) view.findViewById(R.id.id_bg);
 //        top1 = view.findViewById(R.id.id_top1);
-        View tabs = ((MainActivity) getActivity()).getSecondTopTabs();
+        tabs = ((MainActivity) getActivity()).getSecondTopTabs();
         TopTab tabOne = new TopTab(R.id.id_mSelectedOneText, R.id.id_mSelectedOneImage, R.id.id_mSelectedOne, tabs);
+        tabOne.setTag(MainActivity.FIRST_FRAGMENT);
         TopTab tabTwo = new TopTab(R.id.id_mSelectedTwoText, R.id.id_mSelectedTwoImage, R.id.id_mSelectedTwo, tabs);
+        tabTwo.setTag(MainActivity.SECOND_FRAGMENT);
         TopTab tabThree = new TopTab(R.id.id_mSelectedThreeText, R.id.id_mSelectedThreeImage, R.id.id_mSelectedThree, tabs);
+        tabThree.setTag(MainActivity.THIRD_FRAGMENT);
         TopTab tabFour = new TopTab(R.id.id_mSelectedFourText, R.id.id_mSelectedFourImage, R.id.id_mSelectedFour, tabs);
+        tabFour.setTag(MainActivity.FORTH_FRAGMENT);
         topTabs = new ArrayList<>();
         topTabs.add(tabOne);
         topTabs.add(tabTwo);
@@ -120,18 +157,18 @@ public class SecondFragment extends Fragment {
     private void initData() {
         mSelectionList = new ArrayList<>();
 //        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_expandable_list_item_1, Arrays.asList(titles));
-//        firstListView.setAdapter(adapter);
+//        secondListView.setAdapter(adapter);
         List<String> list = new ArrayList<String>();
         for (int i = 0; i < 20; i++) {
             list.add("s");
         }
         ListViewAdapter listViewAdapter = new ListViewAdapter(getActivity(), list, R.layout.second_list_item);
-        firstListView.setAdapter(listViewAdapter);
+        secondListView.setAdapter(listViewAdapter);
 
         gridViewAdapter = new GridViewAdapter(getActivity(), mSelectionList, R.layout.grid_item);
         mSelections.setAdapter(gridViewAdapter);
 
-        handler = new Handler();
+        handler = new MyHandler(this);
 
     }
 
@@ -139,16 +176,28 @@ public class SecondFragment extends Fragment {
         /**
          * 顶部Tab点击事件
          */
-        for (int i = 0; i < topTabs.size(); i++) {
-            final TopTab tab = topTabs.get(i);
-            tab.setTag(i);
-            tab.getFrameLayout().setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setAnimByForTab(tab);
+        tabs.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        float eventX = (Float) event.getRawX();
+                        float eventY = (Float) event.getRawY();
+                        for (int i = 0; i < topTabs.size(); i++) {
+                            Rect rect = new Rect();
+                            TopTab tab = topTabs.get(i);
+                            tab.getFrameLayout().getGlobalVisibleRect(rect);
+                            if (rect.contains((int) eventX, (int) eventY)) {
+                                currentTabClickPos = i;
+                                createTopTabAnimation(tab);
+                                return true;
+                            }
+                        }
+                        break;
                 }
-            });
-        }
+                return true;
+            }
+        });
         /**
          * 下拉选框点击事件
          */
@@ -157,7 +206,6 @@ public class SecondFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TopTab tab = topTabs.get(currentTabClickPos);
                 tab.setLastSelectedPos(position);
-
                 gridViewAdapter.setLastSelectedPos(position);
                 displayOrHidden(tab);
             }
@@ -185,90 +233,178 @@ public class SecondFragment extends Fragment {
             }
         });
 
-    }
+        secondListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getActivity(), EstateDetailActivity.class);
+                startActivity(intent);
+                getActivity().overridePendingTransition(R.anim.activity_slide_right_in, R.anim.activity_no_move);
+            }
+        });
 
+    }
 
     /**
      * 为Tab设置下拉动画
      *
      * @param tab
      */
-    private void setAnimByForTab(final TopTab tab) {
-        if (pullToRefresh.isRefreshing()) {
-            return;
-        }
-        int pos = (int) tab.getTag();
-        currentTabClickPos = pos;
-        if (pos == lastItemClickPos) {
-            displayOrHidden(tab);
+    private void createTopTabAnimation(TopTab tab) {
+        Message msg = Message.obtain();
+        msg.what = ANIMATION_CODE;
+        if (currentTabClickPos == lastItemClickPos) {
+            msg.arg1 = (Integer) tab.getTag();
+            handler.sendMessage(msg);
         } else {
-            if (drawableLinearLayout.isExpandableStatus()) {
-                displayOrHidden(topTabs.get(lastItemClickPos));
-
+            if (-1 != lastItemClickPos && drawableLinearLayout.isExpandableStatus()) {
+                msg.arg1 = (Integer) topTabs.get(lastItemClickPos).getTag();
+                handler.sendMessage(msg);
+                msg.arg1 = (Integer) topTabs.get(currentTabClickPos).getTag();
+                resetTab();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        reBindData(tab);
+                        resetData();
+                        Message message = Message.obtain();
+                        message.what = ANIMATION_CODE;
+                        message.arg1 = currentTabClickPos;
+                        handler.sendMessage(message);
                     }
-                }, drawableLinearLayout.getDuration() + 50);
+                }, drawableLinearLayout.getDuration());
             } else {
-                reBindData(tab);
+                resetTab();
+                resetData();
+                msg.arg1 = currentTabClickPos;
+                handler.sendMessage(msg);
             }
         }
-        lastItemClickPos = pos;
+
+
+        lastItemClickPos = currentTabClickPos;
     }
 
-    private void reBindData(TopTab tab) {
-        drawableLinearLayout.requestLayoutByAnim();
-        int pos = (int) tab.getTag();
+    private void resetTab(){
         mSelectionList.clear();
-
-        switch (pos) {
-            case 0:
+        switch (currentTabClickPos) {
+            case MainActivity.FIRST_FRAGMENT:
                 mSelectionList.addAll(Arrays.asList(mDatas1));
                 break;
-            case 1:
+            case MainActivity.SECOND_FRAGMENT:
                 mSelectionList.addAll(Arrays.asList(mDatas2));
                 break;
-            case 2:
+            case MainActivity.THIRD_FRAGMENT:
                 mSelectionList.addAll(Arrays.asList(mDatas3));
                 break;
-            case 3:
+            case MainActivity.FORTH_FRAGMENT:
                 mSelectionList.addAll(Arrays.asList(mDatas4));
                 break;
         }
-        gridViewAdapter.setLastSelectedPos(tab.getLastSelectedPos());
-        displayOrHidden(tab);
     }
+
+
+    /**
+     * 重置数据
+     */
+    private void resetData() {
+        drawableLinearLayout.requestLayoutByAnim();
+//        mSelectionList.clear();
+//        switch (currentTabClickPos) {
+//            case MainActivity.FIRST_FRAGMENT:
+//                mSelectionList.addAll(Arrays.asList(mDatas1));
+//                break;
+//            case MainActivity.SECOND_FRAGMENT:
+//                mSelectionList.addAll(Arrays.asList(mDatas2));
+//                break;
+//            case MainActivity.THIRD_FRAGMENT:
+//                mSelectionList.addAll(Arrays.asList(mDatas3));
+//                break;
+//            case MainActivity.FORTH_FRAGMENT:
+//                mSelectionList.addAll(Arrays.asList(mDatas4));
+//                break;
+//        }
+        gridViewAdapter.setLastSelectedPos(topTabs.get(currentTabClickPos).getLastSelectedPos());
+    }
+
+//    /**
+//     * 为Tab设置下拉动画
+//     *
+//     * @param tab
+//     */
+//    private void setAnimByForTab(final TopTab tab) {
+//        if (pullToRefresh.isRefreshing()) {
+//            return;
+//        }
+////        int pos = (int) tab.getTag();
+//        if (currentTabClickPos == lastItemClickPos) {
+//            displayOrHidden(tab);
+//        } else {
+//            if (drawableLinearLayout.isExpandableStatus()) {
+//                displayOrHidden(topTabs.get(lastItemClickPos));
+//
+//                handler.postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        reBindData(tab);
+//                    }
+//                }, drawableLinearLayout.getDuration() + 50);
+//            } else {
+//                reBindData(tab);
+//            }
+//        }
+//        lastItemClickPos = currentTabClickPos;
+//    }
+//
+//    private void reBindData(TopTab tab) {
+//        drawableLinearLayout.requestLayoutByAnim();
+//        int pos = (int) tab.getTag();
+//        mSelectionList.clear();
+//
+//        switch (pos) {
+//            case 0:
+//                mSelectionList.addAll(Arrays.asList(mDatas1));
+//                break;
+//            case 1:
+//                mSelectionList.addAll(Arrays.asList(mDatas2));
+//                break;
+//            case 2:
+//                mSelectionList.addAll(Arrays.asList(mDatas3));
+//                break;
+//            case 3:
+//                mSelectionList.addAll(Arrays.asList(mDatas4));
+//                break;
+//        }
+//        gridViewAdapter.setLastSelectedPos(tab.getLastSelectedPos());
+//        displayOrHidden(tab);
+//    }
 
     /**
      * 设置动画
      */
-    private void displayOrHidden(final TopTab tab) {
+    private void displayOrHidden(TopTab tab) {
 //        final TopTab tab = topTabs.get(currentTabClickPos);
         if (!drawableLinearLayout.isExpandableStatus()) {
-            setBgAnimation(drawableLinearLayout.getDuration(), 0, 104);
+            setShadowsAnimation(drawableLinearLayout.getDuration(), 0, 104);
             setAngleAnim(true, tab, drawableLinearLayout.getDuration(), 0, 180);
         } else {
-            setBgAnimation(drawableLinearLayout.getDuration(), 104, 0);
+            setShadowsAnimation(drawableLinearLayout.getDuration(), 104, 0);
             setAngleAnim(true, tab, drawableLinearLayout.getDuration(), 180, 0);
         }
         drawableLinearLayout.displayOrHidden();
         drawableLinearLayout.setAnimatedLayoutListener(new AnimatedLayoutListener() {
             @Override
             public void animationCreated() {
-                int pos = tab.getLastSelectedPos();
-                if (-1 != pos) {
-                    tab.setText(mSelectionList.get(pos));
-                }
             }
 
             @Override
             public void animationEnded() {
-
                 checkTabStatus();
             }
         });
+        int pos = tab.getLastSelectedPos();
+        if (-1 != pos) {
+            if (pos < mSelectionList.size())
+                tab.setText(mSelectionList.get(pos));
+        }
     }
 
     /**
@@ -277,20 +413,23 @@ public class SecondFragment extends Fragment {
     private void checkTabStatus() {
         for (int i = 0; i < topTabs.size(); i++) {
             TopTab tab = topTabs.get(i);
-            if (currentTabClickPos != (Integer) tab.getTag()) {
+            if (drawableLinearLayout.isExpandableStatus() ) {
+                bg.setBackgroundColor(Color.parseColor("#67000000"));
+                if (currentTabClickPos != (Integer) tab.getTag()) {
+                    tab.getTextView().setTextColor(TAB_DEFAULT_COLOR);
+                    tab.setImageRes(R.drawable.icon_angle_light_black);
+                    tab.getImageView().setRotation(0);
+                } else {
+                    tab.getTextView().setTextColor(TAB_SELECTED_COLOR);
+                    tab.setImageRes(R.drawable.icon_angle_red);
+                    tab.getImageView().setRotation(180);
+                }
+            }else{
+                bg.setBackgroundColor(Color.TRANSPARENT);
                 tab.getTextView().setTextColor(TAB_DEFAULT_COLOR);
                 tab.setImageRes(R.drawable.icon_angle_light_black);
                 tab.getImageView().setRotation(0);
-            } else if (drawableLinearLayout.isExpandableStatus()) {
-                tab.getTextView().setTextColor(TAB_SELECTED_COLOR);
             }
-        }
-        if (drawableLinearLayout.isExpandableStatus()) {
-            bg.setBackgroundColor(Color.parseColor("#68000000"));
-            bg.setVisibility(View.VISIBLE);
-        } else {
-            bg.setBackgroundColor(Color.TRANSPARENT);
-            bg.setVisibility(View.GONE);
 
         }
     }
@@ -302,7 +441,7 @@ public class SecondFragment extends Fragment {
      * @param startAlpha
      * @param endAlpaha
      */
-    private void setBgAnimation(int duration, final int startAlpha, final int endAlpaha) {
+    private void setShadowsAnimation(int duration, final int startAlpha, final int endAlpaha) {
         ValueAnimator valueAnimator = ValueAnimator.ofInt(startAlpha, endAlpaha);
         valueAnimator.setDuration(duration);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -319,14 +458,14 @@ public class SecondFragment extends Fragment {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                bg.setVisibility(View.VISIBLE);
+//                bg.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 if (endAlpaha == 0) {
-                    bg.setVisibility(View.GONE);
+//                    bg.setVisibility(View.GONE);
                 }
             }
         });

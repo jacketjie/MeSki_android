@@ -12,9 +12,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.incool.meski_android.MainActivity;
 import com.incool.meski_android.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
@@ -31,15 +33,21 @@ import jacketjie.common.libray.others.DensityUtils;
 
 public class AppMenuLeftFragment extends Fragment implements View.OnClickListener {
     private View view;
-    private String menuTitles[] = {"密苑商城", "点餐吃饭", "密苑SPA", "滑雪教练", "随身摄影师", "雪具租赁", "精彩活动", "视频专区", "雪道状态"};
-
+    private String menuTitles[] = {"主页", "密苑商城", "点餐吃饭", "密苑SPA", "滑雪教练", "随身摄影师", "雪具租赁", "精彩活动", "视频专区", "雪道状态"};
+    private int[] menuLeftRes = {R.drawable.leftbar_icon_home,
+            R.drawable.leftbar_icon_mall, R.drawable.leftbar_icon_eat,
+            R.drawable.leftbar_icon_spa, R.drawable.leftbar_icon_coach,
+            R.drawable.leftbar_icon_camera, R.drawable.leftbar_icon_rent,
+            R.drawable.leftbar_icon_events, R.drawable.leftbar_icon_video,
+            R.drawable.leftbar_icon_skitrack,};
     private int[] iconRes;
     private String[] infos;
     private DisplayImageOptions options;
     private TextView personInfoName;
     private Handler handler;
     private TextView menuOne, menuTwo;
-
+    private ListView menuListView;
+    private ListViewAdapter adapter;
     /**
      * 更新receiver
      */
@@ -52,6 +60,24 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
         }
     };
 
+    private void initView() {
+        menuListView = (ListView) view.findViewById(R.id.id_menuListView);
+
+        List<Menus> beans = new ArrayList<Menus>();
+        for (int i = 0; i < menuTitles.length; i++) {
+            Menus bean = new Menus(menuLeftRes[i],
+                    R.drawable.leftbar_icon_more, menuTitles[i]);
+            beans.add(bean);
+        }
+        adapter = new ListViewAdapter(getActivity(), beans, R.layout.first_detail_list_item);
+        menuListView.setAdapter(adapter);
+
+
+        menuOne = (TextView) view.findViewById(R.id.id_menuOne);
+        menuTwo = (TextView) view.findViewById(R.id.id_menuTwo);
+    }
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +87,6 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
         handler = new Handler();
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -70,6 +95,7 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
                     false);
             initView();
             initDatas();
+            setEventListener();
         } else {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) {
@@ -79,52 +105,47 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
         return view;
     }
 
+    private void initDatas() {
+
+
+    }
+
+    private void setEventListener() {
+        menuOne.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        menuTwo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                handleClick(position);
+            }
+        });
+    }
+
+    /**
+     * 处理点击事件
+     * @param position
+     */
+    private void handleClick(int position) {
+        if (getActivity() instanceof MainActivity) {
+            MainActivity parent = (MainActivity) getActivity();
+            parent.handleMenuSelection(position);
+        }
+
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    private void initDatas() {
-
-        Drawable d = getResources().getDrawable(R.drawable.test_menu_0);
-        Drawable d1 = getResources().getDrawable(R.drawable.test_menu_1);
-
-        int height = DensityUtils.dp2px(getActivity(), 40);
-        int imageWidth = d.getMinimumWidth();
-        int imageHeight = d.getMinimumHeight();
-        float scale = height*1.0f / imageHeight;
-        int width = (int) (imageWidth * scale);
-        menuOne.setPadding(DensityUtils.dp2px(getActivity(),5),0,0,0);
-        d.setBounds(0, 0, width, height);
-        menuOne.setCompoundDrawables(d, null, null, null);
-
-        imageWidth = d1.getMinimumWidth();
-        imageHeight = d1.getMinimumHeight();
-        scale = height*1.0f / imageHeight;
-        width = (int) (scale * imageWidth);
-
-        menuTwo.setPadding(DensityUtils.dp2px(getActivity(),5),0,0,0);
-        d1.setBounds(0, 0, width, height);
-        menuTwo.setCompoundDrawables(d1,null,null,null);
-
-    }
-
-    private void initView() {
-        ListView menuListView = (ListView) view.findViewById(R.id.id_menuListView);
-
-        List<ImageBean> beans = new ArrayList<>();
-        for (int i=0;i < menuTitles.length;i++){
-            ImageBean bean = new ImageBean();
-            bean.setTitle(menuTitles[i]);
-            bean.setImageRes(R.drawable.test_menu);
-            beans.add(bean);
-        }
-        ListViewAdapter adapter = new ListViewAdapter(getActivity(),beans,R.layout.first_detail_list_item);
-        menuListView.setAdapter(adapter);
-
-
-        menuOne = (TextView) view.findViewById(R.id.id_menuOne);
-        menuTwo = (TextView) view.findViewById(R.id.id_menuTwo);
     }
 
 
@@ -144,33 +165,61 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
     }
 
 
-    class ListViewAdapter extends CommonAdapter<ImageBean>{
+    /**
+     * 列表的适配器
+     *
+     * @author Administrator
+     */
+    class ListViewAdapter extends CommonAdapter<Menus> {
+        private List<Menus> menus;
 
-        public ListViewAdapter(Context context, List<ImageBean> mDatas, int itemLayoutId) {
+        public ListViewAdapter(Context context, List<Menus> mDatas,
+                               int itemLayoutId) {
             super(context, mDatas, itemLayoutId);
         }
 
         @Override
-        public void convert(ViewHolder helper, ImageBean item) {
+        public void convert(ViewHolder helper, Menus item) {
             TextView tv = helper.getView(R.id.id_detailItem);
+            Drawable left = getResources().getDrawable(item.getLeftRes());
+            Drawable right = getResources().getDrawable(item.getRightRes());
+            left.setBounds(0, 0, left.getMinimumWidth(),
+                    left.getMinimumHeight());
+            right.setBounds(0, 0, right.getMinimumWidth(),
+                    right.getMinimumHeight());
+            tv.setCompoundDrawables(left, null, right, null);
             tv.setText(item.getTitle());
-            Drawable d = getResources().getDrawable(item.getImageRes());
-            int height = DensityUtils.dp2px(getActivity(),36);
-            int imageWidth = d.getMinimumWidth();
-            int imageHeight = d.getMinimumHeight();
-            float scale = height*1.0f / imageHeight;
-            tv.setPadding(DensityUtils.dp2px(getActivity(),30),0,DensityUtils.dp2px(getActivity(),20),0);
-            d.setBounds(0, 0, (int) (imageWidth * scale), height);
-            tv.setCompoundDrawables(d, null, null, null);
-            tv.setTextColor(Color.BLACK);
         }
     }
 
 
-
-    class ImageBean implements Serializable{
+    static class Menus {
+        private int leftRes;
+        private int rightRes;
         private String title;
-        private int imageRes;
+
+        public Menus(int leftRes, int rightRes, String title) {
+            super();
+            this.leftRes = leftRes;
+            this.rightRes = rightRes;
+            this.title = title;
+        }
+
+        public int getLeftRes() {
+            return leftRes;
+        }
+
+        public void setLeftRes(int leftRes) {
+            this.leftRes = leftRes;
+        }
+
+        public int getRightRes() {
+            return rightRes;
+        }
+
+        public void setRightRes(int rightRes) {
+            this.rightRes = rightRes;
+        }
 
         public String getTitle() {
             return title;
@@ -180,13 +229,6 @@ public class AppMenuLeftFragment extends Fragment implements View.OnClickListene
             this.title = title;
         }
 
-        public int getImageRes() {
-            return imageRes;
-        }
-
-        public void setImageRes(int imageRes) {
-            this.imageRes = imageRes;
-        }
     }
 
 }

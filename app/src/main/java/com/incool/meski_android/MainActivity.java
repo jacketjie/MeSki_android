@@ -1,5 +1,8 @@
 package com.incool.meski_android;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -27,14 +30,16 @@ import com.incool.meski_android.view.fragment.FirstFragment;
 import com.incool.meski_android.view.fragment.ForthFragment;
 import com.incool.meski_android.view.fragment.SecondFragment;
 import com.incool.meski_android.view.fragment.ThirdFragment;
+import com.nineoldandroids.view.ViewHelper;
 
 import jacketjie.common.libray.custom.view.tabhost.AnimFragmentTabHost;
 import jacketjie.common.libray.others.ToastUtils;
 
 public class MainActivity extends AppCompatActivity implements SecondFragment.OnSecondFragmentTouchEventListener {
-    private static final int DEFAULT_TAB_COLOR = Color.parseColor("#666666");
 
-    private static int SELECTED_TAB_COLOR = Color.RED;
+    private static final int DEFAULT_TAB_COLOR = Color.parseColor("#777777");
+
+    private static int SELECTED_TAB_COLOR = Color.parseColor("#6aa3d8");
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawerLayout;
     private RecyclerView recyclerView;
@@ -43,8 +48,8 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
     private String[] TAB_TILES;
     private Class[] fragments = {FirstFragment.class, SecondFragment.class,
             ThirdFragment.class, ForthFragment.class};
-    private int[] tabImageIds = {R.drawable.ic_account_box_black_24dp, R.drawable.ic_dashboard, R.drawable.ic_headset, R.drawable.ic_settings_black_24dp};
-    private int[] tabImageSelectedIds = {R.drawable.ic_account_box_black_24dp, R.drawable.ic_dashboard, R.drawable.ic_headset, R.drawable.ic_settings_black_24dp};
+    private int[] tabImageIds = {R.drawable.tab_home, R.drawable.tab_house, R.drawable.tab_ticket, R.drawable.tab_me};
+    private int[] tabImageSelectedIds = {R.drawable.tab_home_pre, R.drawable.tab_house_pre, R.drawable.tab_ticket_pre, R.drawable.tab_me_pre};
     ;
     public static final int FIRST_FRAGMENT = 0;
     public static final int SECOND_FRAGMENT = 1;
@@ -101,6 +106,37 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 Log.d("onDrawerSlide", "slideOffset=" + slideOffset);
+
+                View mContent = drawerLayout.getChildAt(0);
+                View mMenu = drawerView;
+                float scale = 1 - slideOffset;
+                float rightScale = 0.8f + scale * 0.2f;
+
+                if (drawerView.getTag().equals("LEFT")) {
+
+                    float leftScale = 1 - 0.3f * scale;
+
+                    ViewHelper.setScaleX(mMenu, leftScale);
+                    ViewHelper.setScaleY(mMenu, leftScale);
+                    ViewHelper.setAlpha(mMenu, 0.6f + 0.4f * (1 - scale));
+                    ViewHelper.setTranslationX(mContent,
+                            mMenu.getMeasuredWidth() * (1 - scale));
+                    ViewHelper.setPivotX(mContent, 0);
+                    ViewHelper.setPivotY(mContent,
+                            mContent.getMeasuredHeight() / 2);
+                    mContent.invalidate();
+                    ViewHelper.setScaleX(mContent, rightScale);
+                    ViewHelper.setScaleY(mContent, rightScale);
+                } else {
+                    ViewHelper.setTranslationX(mContent,
+                            -mMenu.getMeasuredWidth() * slideOffset);
+                    ViewHelper.setPivotX(mContent, mContent.getMeasuredWidth());
+                    ViewHelper.setPivotY(mContent,
+                            mContent.getMeasuredHeight() / 2);
+                    mContent.invalidate();
+                    ViewHelper.setScaleX(mContent, rightScale);
+                    ViewHelper.setScaleY(mContent, rightScale);
+                }
 
             }
         };
@@ -162,6 +198,15 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
                 tab.setImageResource(tabImageIds[i]);
                 tabText.setTextColor(DEFAULT_TAB_COLOR);
             }
+            FirstFragment firstFragment = (FirstFragment) getSupportFragmentManager().findFragmentByTag(TAB_TILES[FIRST_FRAGMENT]);
+            if (null != firstFragment) {
+                if (currentId == FIRST_FRAGMENT) {
+                    firstFragment.startScrollBanner();
+                } else {
+                    firstFragment.stopScrollBanner();
+                }
+            }
+
 
         }
     }
@@ -180,7 +225,6 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
         return super.dispatchTouchEvent(ev);
     }
 
-
     @Override
     public void onBackPressed() {
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
@@ -192,7 +236,15 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
                 return;
             }
         }
-        super.onBackPressed();
+        Dialog exitDialog = new AlertDialog.Builder(this).setTitle(R.string.str_exit_app).setMessage(R.string.str_exit_message).setPositiveButton(R.string.str_exit, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        }).setNegativeButton(R.string.str_cancle, null).create();
+        ;
+        exitDialog.show();
+//        super.onBackPressed();
     }
 
     /**
@@ -214,6 +266,45 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.On
 
     public View getSecondTopTabs() {
         return secondTopTabs;
+    }
+
+
+    public void handleMenuSelection(int position) {
+        switch (position) {
+            case 0:
+                if (currentId != FIRST_FRAGMENT) {
+                    tabHost.setCurrentTab(FIRST_FRAGMENT);
+                }
+                drawerLayout.closeDrawers();
+                break;
+            case 1:
+
+                break;
+            case 2:
+
+                break;
+            case 3:
+
+                break;
+            case 4:
+
+                break;
+            case 5:
+
+                break;
+            case 6:
+
+                break;
+            case 7:
+
+                break;
+            case 8:
+
+                break;
+            case 9:
+
+                break;
+        }
     }
 
     @Override
